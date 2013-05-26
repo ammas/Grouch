@@ -1,6 +1,5 @@
 package au.com.grouch.android;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -9,18 +8,23 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 
-public class MainActivity extends Activity implements TextToSpeech.OnInitListener {
+public class MainActivity extends BaseActivity implements TextToSpeech.OnInitListener {
 
     // UI Elements
     Button btnSpeak;
     EditText txtQuery;
+    TextView lblPostcode;
 
     private int SPEECH_REQUEST_CODE = 26513;
     private TextToSpeech textToSpeech;
 
+    @Inject
+    android.location.LocationManager locationManager;
 
 
     @Override
@@ -37,6 +41,24 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         }
     }
 
+    private void determineClosestCouncil(){
+
+
+       DeterminePostcodeRequest determinePostcodeRequest = new DeterminePostcodeRequest(){
+           @Override
+           protected void onPostExecute(String s) {
+               lblPostcode.setText(s);
+               super.onPostExecute(s);
+           }
+       };
+        String lat = "-33.918";
+        String lng = "151.231";
+        determinePostcodeRequest.execute(lat,lng);
+
+    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +66,13 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         setContentView(R.layout.activity_main);
         btnSpeak = (Button) findViewById(R.id.bt_speakonce);
         txtQuery = (EditText) findViewById(R.id.txtQuery);
+        lblPostcode = (TextView) findViewById(R.id.lblPostcode);
 
         // initializing text to speech, in case the user prefers to use listening function
-        textToSpeech = new TextToSpeech(this,this);
+        textToSpeech
+                = new TextToSpeech(this,this);
 
+        determineClosestCouncil();
 
 
         // setting up the listeners
@@ -98,6 +123,16 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        if (textToSpeech != null)
+        {
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
     }
     
 }

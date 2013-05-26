@@ -10,6 +10,10 @@ apply plugin: 'android'
 
 dependencies {
     compile files('libs/android-support-v4.jar')
+    compile files('libs/dagger-1.0.0.jar')
+    compile files('libs/javax.inject-1.jar')
+
+
 }
 
 android {

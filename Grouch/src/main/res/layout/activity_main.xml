@@ -19,9 +19,18 @@
 
     <Button
             android:id="@+id/bt_speakonce"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:text="speak" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="speak" />
+
+    <TextView
+            android:id="@+id/lblPostcode"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Locating..."
+            android:layout_gravity="left|center_vertical"/>
+
 
 </LinearLayout>
